@@ -1,4 +1,5 @@
-﻿using Neleus.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.Logging;
+using Neleus.DependencyInjection.Extensions;
 
 namespace SyteLineDevTools.MVVM.Services
 {
@@ -11,16 +12,27 @@ namespace SyteLineDevTools.MVVM.Services
     public class RegionService
     {
         IServiceProvider serviceProvider;
-        public RegionService(IServiceProvider serviceProvider)
+        ILogger<RegionService> logger;
+        public RegionService(IServiceProvider serviceProvider, ILogger<RegionService> logger)
         {
             this.serviceProvider = serviceProvider;
+            this.logger = logger;
         }
         public Dictionary<string, INavigationService> NavigationServices { get; set; } = new Dictionary<string, INavigationService>(System.StringComparer.InvariantCultureIgnoreCase);
         public void Navigate(string RegionName, string ViewName, Dictionary<string, object>? parameters = null)
         {
             //Need Neuleus so I can register a class that wraps the view so I can pull it back up.
             //Have to make a extension method for Registering the new.
-            var view = serviceProvider.GetServiceByName<IView>(ViewName);
+
+            IView? view;
+            try
+            {
+                view = serviceProvider.GetServiceByName<IView>(ViewName);
+            } catch (ArgumentException ex)
+            {
+                logger?.LogError(ex, $"Navigate Unable to find {ViewName}");
+                return;
+            }
             if (view == null)
             {
                 return;

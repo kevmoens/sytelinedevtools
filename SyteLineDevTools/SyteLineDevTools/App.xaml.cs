@@ -22,7 +22,7 @@ namespace SyteLineDevTools
         {
             ConfigureServices();
             base.OnStartup(e);
-
+            ViewModelLocator.ServiceProvider = ServiceProvider;
             this.MainWindow = new Views.MainWindow() { Visibility = Visibility.Visible };
 
         }
