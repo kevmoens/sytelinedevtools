@@ -3,12 +3,103 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:svc="clr-namespace:SyteLineDevTools.MVVM.Services;assembly=SyteLineDevTools.MVVM"
+        xmlns:modelMW="clr-namespace:SyteLineDevTools.Models.MainWindow"
+        xmlns:conv="clr-namespace:SyteLineDevTools.Converters"
+        xmlns:convmw="clr-namespace:SyteLineDevTools.Converters.MainWindow"
         xmlns:local="clr-namespace:SyteLineDevTools"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="SyteLine Development Tools" Height="450" Width="800"
+        
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        >
+    <Window.Resources>
+        <convmw:HamburgerMenuWidthConverter x:Key="HamburgerMenuWidthConverter"/>
+        <convmw:HamburerMenuSelectedValueConverter x:Key="HamburerMenuSelectedValueConverter"/>
+        <conv:BooleanConverter x:Key="BooleanToVisibilityConverter" FalseValue="Visibility.Hidden" TrueValue="Visibility.Visible"/>
+        <conv:BooleanConverter x:Key="BooleanToHamburgerMenuWidthConverter" FalseValue="41" TrueValue="115"/>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction CommandName="LoadedCommand" PassEventArgsToCommand="False" Command="{Binding LoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
-
-        <Frame x:Name="MainRegion" NavigationUIVisibility="Hidden" svc:RegionManager.ServiceProvider="{Binding ServiceProvider}" svc:RegionManager.RegionName="MainRegion" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="MenuGrid" 
+              Grid.RowSpan="2"
+              HorizontalAlignment="Left" 
+              Width="{Binding ElementName=hamburgerMenu,Path=IsChecked, Converter={StaticResource HamburgerMenuWidthConverter}}"
+              Background="{DynamicResource PrimaryHueMidBrush}"
+              >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ToggleButton x:Name="hamburgerMenu" HorizontalAlignment="Left" Margin="5 0 0 0" Width="40" IsChecked="{Binding IsHamburgerOpen}" Style="{StaticResource MaterialDesignHamburgerToggleButton}">
+                <materialDesign:PackIcon Kind="Menu" />
+            </ToggleButton>
+            <ListView Grid.Row="1" 
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      SelectedValue="{Binding SelectedView, Converter={StaticResource HamburerMenuSelectedValueConverter}}"
+                      Width="{Binding ElementName=MenuGrid,Path=ActualWidth}"
+                      >
+                <ListViewItem Height="40" modelMW:HamburgerMenuItem.Value="Repository" Width="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToHamburgerMenuWidthConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEC50;" Margin="5" VerticalAlignment="Center"/>
+                        <TextBlock Text="Repository" VerticalAlignment="Center" Margin="5" Visibility="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem Height="40" modelMW:HamburgerMenuItem.Value="AllLabels"  Width="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToHamburgerMenuWidthConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE133;" Margin="5" VerticalAlignment="Center"/>
+                        <TextBlock Text="All Labels" VerticalAlignment="Center" Margin="5" Visibility="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem Height="40" modelMW:HamburgerMenuItem.Value="FileLabels" Width="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToHamburgerMenuWidthConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE932;" Margin="5" VerticalAlignment="Center"/>
+                        <TextBlock Text="File Labels" VerticalAlignment="Center" Margin="5" Visibility="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem Height="40" modelMW:HamburgerMenuItem.Value="Unlabelled" Width="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToHamburgerMenuWidthConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE13F;" Margin="5" VerticalAlignment="Center"/>
+                        <TextBlock Text="Unlabelled" VerticalAlignment="Center" Margin="5" Visibility="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    </StackPanel>
+                </ListViewItem>
+            </ListView>
+        </Grid>
+        <Grid x:Name="ConnectionGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ComboBox x:Name="FromConnection" Grid.Column="0" ItemsSource="{Binding connections.Keys}" SelectedItem="{Binding FromConnection}"/>
+            <ComboBox x:Name="ToConnection" Grid.Column="1" ItemsSource="{Binding connections.Keys}" SelectedItem="{Binding ToConnection}"/>
+            <TextBlock Text="Working Directory" Grid.Row="1"/>
+            <TextBlock Text="{Binding WorkingDir}" Grid.Row="1" Grid.Column="1"/>
+            <Button x:Name="BrowseWorkingDir" Grid.Row="1" Grid.Column="2" Command="{Binding BrowseWorkingDirCommand}">...</Button>
+        </Grid>
+        <Frame x:Name="MainRegion" NavigationUIVisibility="Hidden" svc:RegionManager.ServiceProvider="{Binding ServiceProvider}" svc:RegionManager.RegionName="MainRegion" Grid.Column="1" Grid.Row="1"/>
     </Grid>
 </Window>

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using SyteLineDevTools.MVVM.Services;
+using SyteLineDevTools.SyteLine.Connections;
 
 namespace SyteLineDevTools
 {
@@ -29,8 +30,10 @@ namespace SyteLineDevTools
         public static void ConfigureServices()
         {
             IServiceCollection services = new ServiceCollection();
-            services.AddSingleton<RegionService>()
+            services
+                .AddSingleton<RegionService>()
                 .AddTransient<IMessageBox, Models.MessageBox>()
+                .AddSingleton<AllConnections>(new AllConnections(StringComparer.InvariantCultureIgnoreCase))
                 .AddTransient<ViewModels.MainWindowViewModel>()
                 .AddTransient<Views.MainWindow>()
                 ;

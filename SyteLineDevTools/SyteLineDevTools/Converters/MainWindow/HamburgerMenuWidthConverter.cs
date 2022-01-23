@@ -19,7 +19,7 @@ namespace SyteLineDevTools.Converters.MainWindow
                     return 120;
                 }
             }
-            return 35;
+            return 46;
         }
 
         public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
