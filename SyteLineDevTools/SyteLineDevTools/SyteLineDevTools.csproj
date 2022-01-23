@@ -8,8 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
@@ -17,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SyteLineDevTools.Core\SyteLineDevTools.MVVM.csproj" />
+    <ProjectReference Include="..\SyteLineDevTools.SyteLine\SyteLineDevTools.SyteLine.csproj" />
   </ItemGroup>
 
 </Project>
