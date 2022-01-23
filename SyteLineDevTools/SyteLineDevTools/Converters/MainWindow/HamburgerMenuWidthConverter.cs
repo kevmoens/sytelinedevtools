@@ -16,7 +16,7 @@ namespace SyteLineDevTools.Converters.MainWindow
             {
                 if ((bool)value)
                 {
-                    return 120;
+                    return 140;
                 }
             }
             return 46;

@@ -23,7 +23,7 @@
         <convmw:HamburgerMenuWidthConverter x:Key="HamburgerMenuWidthConverter"/>
         <convmw:HamburerMenuSelectedValueConverter x:Key="HamburerMenuSelectedValueConverter"/>
         <conv:BooleanConverter x:Key="BooleanToVisibilityConverter" FalseValue="Visibility.Hidden" TrueValue="Visibility.Visible"/>
-        <conv:BooleanConverter x:Key="BooleanToHamburgerMenuWidthConverter" FalseValue="41" TrueValue="115"/>
+        <conv:BooleanConverter x:Key="BooleanToHamburgerMenuWidthConverter" FalseValue="41" TrueValue="135"/>
     </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -60,8 +60,8 @@
                       >
                 <ListViewItem Height="40" modelMW:HamburgerMenuItem.Value="Repository" Width="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToHamburgerMenuWidthConverter}}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEC50;" Margin="5" VerticalAlignment="Center"/>
-                        <TextBlock Text="Repository" VerticalAlignment="Center" Margin="5" Visibility="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <materialDesign:PackIcon Kind="Database" Margin="5" VerticalAlignment="Center"/>
+                        <TextBlock Text="Connections" VerticalAlignment="Center" Margin="5" Visibility="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </StackPanel>
                 </ListViewItem>
                 <ListViewItem Height="40" modelMW:HamburgerMenuItem.Value="AllLabels"  Width="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToHamburgerMenuWidthConverter}}">
@@ -84,7 +84,7 @@
                 </ListViewItem>
             </ListView>
         </Grid>
-        <Grid x:Name="ConnectionGrid">
+        <Grid x:Name="ConnectionGrid" Grid.Column="1" Margin="2" Background="{DynamicResource PrimaryHueMidBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

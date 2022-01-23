@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SyteLineDevTools.SyteLine.Connections
 {
@@ -26,15 +28,35 @@ namespace SyteLineDevTools.SyteLine.Connections
     public static class AllConnectionsExtensions
     {
         private static byte[] IVKey = new byte[] { 0x22, 0x70, 0x29, 0x80, 0x12, 0x04, 0x80, 0x09, 0x25, 0x79, 0x04, 0x18, 0x97, 0x07, 0x31, 0x99, 0x06, 0x20, 0x02, 0x01, 0x14, 0x11 };
-        public static void LoadConnections(this AllConnections connections)
+        public static async Task LoadConnections(this AllConnections connections)
         {
-            var path = GetStartupDirectory();
-            var connectionFile = System.IO.Path.Combine(path, "connections.data");
-
+            await Task.Run(() =>
+            {
+                var path = GetStartupDirectory();
+                var connectionFile = System.IO.Path.Combine(path, "connections.data");
+                if (File.Exists(connectionFile))
+                {
+                    var fileData = File.ReadAllText(connectionFile);
+                    var key = GetEncryptionKey();
+                    var decryptText = DecryptFile(fileData, key);
+                    //Deserialize
+                    connections.Clear();
+                    DeserializeConnections(decryptText);
+                }
+            });
         }
-        public static void SaveConnection(this AllConnections connections)
+        public static async Task SaveConnection(this AllConnections connections)
         {
-
+            await Task.Run(() =>
+            {
+                var path = GetStartupDirectory();
+                var connectionFile = System.IO.Path.Combine(path, "connections.data");
+                var key = GetEncryptionKey();
+                //Serialize
+                var decryptText = SerializeConnections(connections);
+                var encryptText = EncryptFile(decryptText, key);
+                File.WriteAllText(connectionFile, encryptText);
+            });
         }
         private static string GetStartupDirectory()
         {
@@ -51,17 +73,29 @@ namespace SyteLineDevTools.SyteLine.Connections
             var filename = Path.Combine(dirPath, "key.data");
             if (File.Exists(filename))
             {
-                //Read File
-                //return value
+                return File.ReadAllText(filename);                
             } 
 
             //doesn't exist
+
             //create value
+            Random random = new Random();
+            byte[] buffer = { };
+            byte[] key = new byte[128];
+            for (int i = 0; i < 128; i++)
+            {
+                random.NextBytes(buffer);
+                key[i] = buffer[0];
+            }
+
             //save file
-            //return value
+            var newKey = Convert.ToBase64String(key);
+            File.WriteAllText(filename, newKey);
+            return newKey;
         }
-        private static void EncryptFile(string inputFile, string outputFile, string skey)
+        private static string EncryptFile(string inputFile, string skey)
         {
+            string outputFile = String.Empty;
             using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
             {
                 byte[] key = ASCIIEncoding.UTF8.GetBytes(skey);
@@ -84,10 +118,11 @@ namespace SyteLineDevTools.SyteLine.Connections
                     }
                 }
             }
-
+            return outputFile;
         }
-        private static void DecryptFile(string inputFile, string outputFile, string skey)
+        private static string DecryptFile(string inputFile, string skey)
         {
+            string outputFile = String.Empty;
             using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
             {
                 byte[] key = ASCIIEncoding.UTF8.GetBytes(skey);
@@ -110,6 +145,26 @@ namespace SyteLineDevTools.SyteLine.Connections
                     }
                 }
             }
+            return outputFile;
+        }
+        private static string SerializeConnections(AllConnections connections)
+        {
+            JObject document = new JObject();
+            JArray items = new JArray();
+            foreach (var key in connections.Keys)
+            {
+                var obj = new JObject();
+                obj.Add(key);
+                var objDetail = JObject.FromObject(connections[key]);
+                obj.Add(objDetail);
+                items.Add(obj);
+            }
+            document.Add(items);
+            return document.ToString();
+        }
+        private static void DeserializeConnections(string text)
+        {
+
         }
     }
 }
