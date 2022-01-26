@@ -14,3 +14,6 @@ obj/
 *.log
 packages*/
 lib*/
+/SyteLineDevTools/.vs/SyteLineDevTools/DesignTimeBuild/.dtbcache.v2
+/SyteLineDevTools/.vs/SyteLineDevTools/project-colors.json
+/SyteLineDevTools/.vs/SyteLineDevTools/v17/.futdcache.v1

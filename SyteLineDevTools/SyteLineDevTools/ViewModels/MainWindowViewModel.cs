@@ -77,10 +77,10 @@ namespace SyteLineDevTools.ViewModels
             LoadedCommand = new DelegateCommand(OnLoaded);
             NavigationRequest += OnNavigationRequest;
         }
-        public void OnLoaded()
+        public async void OnLoaded()
         {
-            connections.LoadConnections();
-            OnNavigationRequest("Repository");
+            await connections.LoadConnections();
+            OnNavigationRequest("Connections");
         }
         void OnNavigationRequest(string view)
         {

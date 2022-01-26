@@ -36,9 +36,12 @@ namespace SyteLineDevTools
                 .AddSingleton<AllConnections>(new AllConnections(StringComparer.InvariantCultureIgnoreCase))
                 .AddTransient<ViewModels.MainWindowViewModel>()
                 .AddTransient<Views.MainWindow>()
+                .AddTransient<ViewModels.ConnectionsViewModel>()
+                .AddTransient<Views.Connections>()
                 ;
             services.AddByName<IView>()
                 .Add<Views.MainWindow>("MainWindow")
+                .Add<Views.Connections>("Connections")
                 .Build()
                 ;
 

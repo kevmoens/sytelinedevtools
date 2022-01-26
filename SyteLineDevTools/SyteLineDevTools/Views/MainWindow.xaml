@@ -58,7 +58,7 @@
                       SelectedValue="{Binding SelectedView, Converter={StaticResource HamburerMenuSelectedValueConverter}}"
                       Width="{Binding ElementName=MenuGrid,Path=ActualWidth}"
                       >
-                <ListViewItem Height="40" modelMW:HamburgerMenuItem.Value="Repository" Width="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToHamburgerMenuWidthConverter}}">
+                <ListViewItem Height="40" modelMW:HamburgerMenuItem.Value="Connections" Width="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToHamburgerMenuWidthConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Database" Margin="5" VerticalAlignment="Center"/>
                         <TextBlock Text="Connections" VerticalAlignment="Center" Margin="5" Visibility="{Binding IsHamburgerOpen, Converter={StaticResource BooleanToVisibilityConverter}}"/>

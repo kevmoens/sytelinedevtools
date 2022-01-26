@@ -11,7 +11,7 @@ namespace SyteLineDevTools.Converters.MainWindow
 {
     public class HamburerMenuSelectedValueConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
         }
